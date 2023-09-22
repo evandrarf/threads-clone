@@ -1,16 +1,22 @@
 import AccountProfile from "@/components/forms/AccountProfile";
 import React from "react";
 import { currentUser } from "@clerk/nextjs";
+import { fetchUser } from "@/lib/actions/user.actions";
+import { redirect } from "next/navigation";
 
 async function Page() {
   const user = await currentUser();
 
-  const userInfo = {};
+  if (!user) return redirect("/sign-in");
+
+  const userInfo = await fetchUser(user?.id);
+
+  if (userInfo?.onboarded) return redirect("/");
 
   const userData = {
     id: user?.id,
-    objectId: userInfo?.id,
-    username: userInfo?.username || user?.username,
+    objectId: userInfo?.id || "",
+    username: userInfo?.username || user?.username || "",
     name: userInfo?.name || user?.firstName || "",
     bio: userInfo?.bio || "",
     image: userInfo?.image || user?.imageUrl,

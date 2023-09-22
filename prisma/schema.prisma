@@ -29,5 +29,5 @@ model Thread {
   createdAt DateTime @default(now())
   parentId String?
   parent Thread? @relation("Parent", fields: [parentId], references: [id])
-  childern Thread[] @relation("Parent")
+  children Thread[] @relation("Parent")
 }

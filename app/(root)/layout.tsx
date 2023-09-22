@@ -21,13 +21,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await currentUser();
+  // const user = await currentUser();
 
-  if (user) {
-    const userInfo = await fetchUser(user.id);
+  // if (user) {
+  //   const userInfo = await fetchUser(user.id);
 
-    if (!userInfo?.onboarded) redirect("/onboarding");
-  }
+  //   if (!userInfo?.onboarded) redirect("/onboarding");
+  // }
 
   return (
     <ClerkProvider>

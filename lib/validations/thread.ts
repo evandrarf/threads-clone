@@ -15,5 +15,4 @@ export const CommentValidation = z.object({
     .min(3, { message: "Minimum 3 characters" })
     .max(1000)
     .nonempty(),
-  accountId: z.string(),
 });
