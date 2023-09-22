@@ -16,12 +16,16 @@ export async function createThread({
   // communityId,
   path,
 }: Params) {
-  const createdThread = await prisma.thread.create({
-    data: {
-      text,
-      authorId: author,
-    },
-  });
+  try {
+    const createdThread = await prisma.thread.create({
+      data: {
+        text,
+        authorId: author,
+      },
+    });
 
-  revalidatePath(path);
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Error creating Thread: ${error.message}`);
+  }
 }
