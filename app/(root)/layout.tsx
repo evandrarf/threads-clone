@@ -1,4 +1,4 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, currentUser } from "@clerk/nextjs";
 import "../globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -6,6 +6,8 @@ import TopBar from "@/components/share/TopBar";
 import LeftSidebar from "@/components/share/LeftSidebar";
 import RightSidebar from "@/components/share/RightSidebar";
 import BottomBar from "@/components/share/BottomBar";
+import { fetchUser } from "@/lib/actions/user.actions";
+import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,11 +16,19 @@ export const metadata: Metadata = {
   description: "Next.js Threads App",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await currentUser();
+
+  if (user) {
+    const userInfo = await fetchUser(user.id);
+
+    if (!userInfo?.onboarded) redirect("/onboarding");
+  }
+
   return (
     <ClerkProvider>
       <html lang="en">
