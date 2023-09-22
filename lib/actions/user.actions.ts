@@ -44,16 +44,79 @@ export async function updateUser({
   }
 }
 
-export async function fetchUser(identifier: string) {
+export async function fetchUser(
+  identifier: string,
+  using: string = "identifier",
+  withThreads: boolean = false
+) {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        identifier,
-      },
-    });
+    let user;
+    if (using === "identifier") {
+      user = await prisma.user.findUnique({
+        where: {
+          identifier,
+        },
+        include: {
+          threads: withThreads,
+        },
+      });
+    } else if (using === "id") {
+      user = await prisma.user.findUnique({
+        where: {
+          id: identifier,
+        },
+        include: {
+          threads: withThreads,
+        },
+      });
+    }
 
     return user;
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
+
+export async function fetchUserPosts(userId: string) {
+  try {
+    const threads = prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        threads: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                name: true,
+                identifier: true,
+                image: true,
+              },
+            },
+            children: {
+              select: {
+                parentId: true,
+                authorId: true,
+                text: true,
+                createdAt: true,
+                id: true,
+                author: {
+                  select: {
+                    name: true,
+                    image: true,
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return threads;
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user threads: ${error.message}`);
   }
 }
