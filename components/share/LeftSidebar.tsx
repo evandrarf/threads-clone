@@ -1,7 +1,13 @@
 "use client";
 
 import { sidebarLinks } from "@/constants";
-import { SignOutButton, SignedIn } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignOutButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -49,6 +55,13 @@ function LeftSidebar() {
             </div>
           </SignOutButton>
         </SignedIn>
+        <SignedOut>
+          <SignInButton>
+            <button className="text-light-2 w-1/2 py-3 max-lg:text-subtle-medium max-lg:w-fit max-lg:px-3 rounded-lg bg-indigo-600">
+              Sign In
+            </button>
+          </SignInButton>
+        </SignedOut>
       </div>
     </section>
   );
